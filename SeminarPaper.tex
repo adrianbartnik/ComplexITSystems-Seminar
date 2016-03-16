@@ -25,44 +25,61 @@ Email: bartnik@campus.tu-berlin.de}}
 
 \begin{abstract}
 This paper gives an overview about the requirements and the demands of a real-time stream processing platform.
-As an example, it presents the architecture and design decisions of Apache Storm and its successor Twitter Heron.
-It gives compares both approaches and gives and an outlook for future.
+As an example, it presents the architecture and design decisions of Apache Storm, its successor Twitter Heron and Google`s MillWheel. % Asumptions?
+It compares each streaming platform in terms of prior assumptions, scalability and extensibility.
+Finally, it presents a summary with the advantages and disadvantages of each platform and gives an outlook for future use cases.
 
 \end{abstract}
 
 \section{Introduction}
 
 In recent years, stream processing has become a new companion to the family of big data buzzwords.
-This paper presents the challenges that come with it and a state of the art technology overview.
+This paper presents the challenges that come with it and a state-of-the-art technology overview.
 
 Twitter is a real-time messaging service with XXX millions users each month.
+Their record in most processed tweets per minute was 618,725, which demonstrates the sheer scale on which the platform has to operate.
+
+\subsection{Real-time Stream Processing}
 
 Stream processing has many aspects, that have to be considered independently.
 
+\subsection{Requirements of a Stream Processing Platform}
+
+Modern requirements for a real-time stream processing platform.
+
+\cite{The8Requirements}
+\cite{ElasticScalingStreamProcessing}
+\cite{OnlyOneLook}
+\cite{YARN}
+\cite{ScalableDistributedStreamProcessing}
+
 Describe structure of the paper.
 First, it describes the requirements of a stream processing platform.
+After that, it presents the 3 streaming platforms Apache Storm, Twitter Heron and Google MillWheel in detail.
 
-\section{Requirements of a Stream Processing Platform}
+\section{Related Work}
 
-\section{Background}
-\subsection{Apache Storm Architecture}
+\cite{InfoQGameChanger}
+
+\section{Apache Storm}
+
+\cite{StormTwitter}
+
+\section{Twitter Heron}
+
+\subsection{Evolution from Apache Storm}
+
 \subsection{Twitter Heron Architecture}
+
+% \section{Google MillWheel}
+
+% \cite{Millwheel}
 
 \section{Evaluation}
 
-Most of the academic staff in the School of Computer Science and Software Engineering have publications in their field of expertise or research. 
-The majority of the publications appear in journals or proceedings of conferences. 
-Articles appearing in journals may be written by a single author.
-
-\cite{YARN}
 \cite{TwitterHeronBlog}
-\cite{InfoQGameChanger}
-\cite{ElasticScalingStreamProcessing}
-\cite{OnlyOneLook}
+
 \cite{TwitterHeron}
-\cite{The8Requirements}
-\cite{StormTwitter}
-\cite{ScalableDistributedStreamProcessing}
 
 
 \section{Conclusion}
@@ -74,7 +91,5 @@ The conclusion goes here.
 
 \bibliographystyle{plain} %Choose a bibliograhpic style
 \bibliography{Bibliography}
-
-\end{document}
 
 \end{document}
