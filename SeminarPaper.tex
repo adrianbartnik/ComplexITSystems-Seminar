@@ -32,18 +32,38 @@ Finally, it presents a summary with the advantages and disadvantages of each pla
 \end{abstract}
 
 \section{Introduction}
+\label{sec:Introduction}
 
 In recent years, stream processing has become a new companion to the family of big data buzzwords.
-This paper presents the challenges that come with it and a state-of-the-art technology overview.
+It describes the paradigm of processing incoming high-volume data stream, where the data can come from various sources.
+Scenarios are micro transactions at a stock exchange, sensor measurements from small independent devices in the upcoming area of the Internet of Things or analytic data coming in from millions of mobile phones.
 
-Twitter is a real-time messaging service with XXX millions users each month.
-Their record in most processed tweets per minute was 618,725, which demonstrates the sheer scale on which the platform has to operate.
+Most major Internet-scale companies either have their own proprietary stream processing platform or use some open-source alternative.
+One prominent example is Twitter, a real-time messaging service with over 320 million active users and over 1 billion unique site visits each month.
+Twitter uses stream processing in various places, for example to compute the trending topics, a small section on their website showing the currently most used, and therefore most relevant keywords by their users.
+In 2011 Twitter started off developing its own stream processing platform Twitter Storm after acquiring the technology from the company BackType.
+Shortly afterwards, they also made the whole project available under open source and it became an Apache top-level project.
+
+But, using Storm at its scale was becoming increasingly challenging due to issues related to scalability, debug-ability, manageability, and efficient sharing of cluster resources with other data services.
+The company therefore started to develop a new system, Twitter Heron, which should fix their problems and also be able to scale for the future.
+Twitter Heron is now the de facto stream data processing platform inside Twitter.
+
+The rest of the paper is organized as follows: The following section, Section \ref{sec:Background}, describes the characteristics of real-time stream processing and the requirements of a stream processing platform.
+Section \ref{sec:RelatedWork} describes other platforms and related work.
+Section \ref{sec:ApacheStorm} and \ref{sec:TwitterHeron} describe Apache Strom and Titter Heron respectively, where the later also describes the evolution between the two platform.
+The evaluation in section \ref{sec:Evaluation} compares both approaches.
+Finally, section \ref{sec:Conclusion} contains the conclusion.
+
+\section{Background}
+\label{sec:Background}
 
 \subsection{Real-time Stream Processing}
+\label{sec:RealTimeStreamProcessing}
 
 Stream processing has many aspects, that have to be considered independently.
 
 \subsection{Requirements of a Stream Processing Platform}
+\label{sec:RequirementsOfAStreamProcessingPlatform}
 
 Modern requirements for a real-time stream processing platform.
 
@@ -58,24 +78,30 @@ First, it describes the requirements of a stream processing platform.
 After that, it presents the 3 streaming platforms Apache Storm, Twitter Heron and Google MillWheel in detail.
 
 \section{Related Work}
+\label{sec:RelatedWork}
 
 \cite{InfoQGameChanger}
 
 \section{Apache Storm}
+\label{sec:ApacheStorm}
 
 \cite{StormTwitter}
 
 \section{Twitter Heron}
+\label{sec:TwitterHeron}
 
 \subsection{Evolution from Apache Storm}
+\label{sec:EvolutionFromApacheStorm}
 
 \subsection{Twitter Heron Architecture}
+\label{sec:TwitterHeronArchitecture}
 
 % \section{Google MillWheel}
 
 % \cite{Millwheel}
 
 \section{Evaluation}
+\label{sec:Evaluation}
 
 \cite{TwitterHeronBlog}
 
@@ -83,6 +109,7 @@ After that, it presents the 3 streaming platforms Apache Storm, Twitter Heron an
 
 
 \section{Conclusion}
+\label{sec:Conclusion}
 
 The conclusion goes here.
 
