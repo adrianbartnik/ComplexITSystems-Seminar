@@ -57,10 +57,23 @@ Finally, section \ref{sec:Conclusion} contains the conclusion.
 \section{Background}
 \label{sec:Background}
 
+This section explains the fundamentals of stream processing and the characteristics and requirements of a stream processing platform respectively.
+
 \subsection{Real-time Stream Processing}
 \label{sec:RealTimeStreamProcessing}
 
-Stream processing has many aspects, that have to be considered independently.
+The major distinction between plain big data and stream processing is, that the later operates on \emph{unbounded data}.
+This means, that the size of the input is ever-growing and essentially infinite, whereas usually the input size is typically limited by either the file or database size and known in advance \cite{WorldBeyondBatch}.
+
+Generally speaking, stream processing describes a one-at-a-time processing model, where each data item is arriving separately and is independent from the rest.
+This holds true for most use cases, such as financial transactions, sensor measurements from different devices or in Twitter's case \emph{tweets}.
+As results should be available as fast as possible, the items should be process upon arrival and not be combined into batches.
+The goal is typically to achieve sub-second latency \cite{BeyondBatchProcessing}.
+
+The computations of a stream processing platform on the incoming data should ideally be simple, independent and separated.
+This way it becomes easier to distribute the computations onto different machines in one cluster and thus the whole platform can scale better.
+In many systems the computations on the data form a directed acyclic graph, e.g. the jobgraph in Flink or, as we will see, a topology in Heron \cite{Flink}.
+Finally, all computations should happen in-memory, because writing intermediate results to disk would introduce a big delay compared to pure memory access.
 
 \subsection{Requirements of a Stream Processing Platform}
 \label{sec:RequirementsOfAStreamProcessingPlatform}
