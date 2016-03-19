@@ -78,17 +78,20 @@ Finally, all computations should happen in-memory, because writing intermediate 
 \subsection{Requirements of a Stream Processing Platform}
 \label{sec:RequirementsOfAStreamProcessingPlatform}
 
-Modern requirements for a real-time stream processing platform.
+In 2005, Michael Stonebraker et al. outlined eight requirements that a system should meet to excel at a variety of real-time stream processing applications.
+They provide high-level guidance when evaluating alternative solutions \cite{The8Requirements}.
+Later on, these requirements will be compared to Apache Storm and Twitter Heron.
 
-\cite{The8Requirements}
-\cite{ElasticScalingStreamProcessing}
-\cite{OnlyOneLook}
-\cite{YARN}
-\cite{ScalableDistributedStreamProcessing}
-
-Describe structure of the paper.
-First, it describes the requirements of a stream processing platform.
-After that, it presents the 3 streaming platforms Apache Storm, Twitter Heron and Google MillWheel in detail.
+\begin{LaTeXdescription}
+  \item[1) Keep the data moving] The data should be processed \emph{in-stream}, without a requirement to be stored on disk to perform additional operations
+  \item[2) Query using SQL on Streams] Support a high-level “StreamSQL” language with built-in extensible stream-oriented primitives and operators.
+  \item[3) Handle Stream Imperfections] Provide resiliency against stream “imperfections”, including delayed, missing and out-of-order data.
+  \item[4) Generate Predictable Outcomes] A stream processing platform must guarantee predictable and repeatable outcomes.
+  \item[5) Integrate Stored and Streaming Data] The system should be able to integrate live and stored data seamlessly and to have the capability to efficiently store, access and modify state information.
+  \item[6) Guarantee Data Safety and Availability] Ensure that the system is up and available, and the integrity of the data maintained at all times, despite failures.
+  \item[7) Partition and Scale Applications Automatically] The system should enable incremental scalability across multiple processors or machines, ideally automatically and transparent.
+  \item[8) Process and Respond Instantaneously] The stream processing system must have a highly-optimized, minimal-overhead execution engine to deliver real-time response for high-volume applications.
+\end{LaTeXdescription}
 
 \section{Related Work}
 \label{sec:RelatedWork}
@@ -109,6 +112,11 @@ After that, it presents the 3 streaming platforms Apache Storm, Twitter Heron an
 \subsection{Twitter Heron Architecture}
 \label{sec:TwitterHeronArchitecture}
 
+\cite{ElasticScalingStreamProcessing}
+\cite{OnlyOneLook}
+\cite{YARN}
+\cite{ScalableDistributedStreamProcessing}
+
 % \section{Google MillWheel}
 
 % \cite{Millwheel}
@@ -119,6 +127,8 @@ After that, it presents the 3 streaming platforms Apache Storm, Twitter Heron an
 \cite{TwitterHeronBlog}
 
 \cite{TwitterHeron}
+
+Reference 8 requirements \ref{sec:RequirementsOfAStreamProcessingPlatform}.
 
 
 \section{Conclusion}
