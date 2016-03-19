@@ -8,6 +8,10 @@
 \usepackage{hyphenat} % For linebreaks
 \usepackage{hyperref}
 \usepackage{geometry}
+\usepackage{graphicx} % IncludeGraphis
+\usepackage{caption} % Subfigure
+\usepackage{subcaption} % Subfigure
+\usepackage{lipsum} % Lorem Ipsum dummy text
 
 % correct bad hyphenation here
 % \hyphenation{op-tical net-works semi-conduc-tor}
@@ -93,24 +97,97 @@ Later on, these requirements will be compared to Apache Storm and Twitter Heron.
   \item[8) Process and Respond Instantaneously] The stream processing system must have a highly-optimized, minimal-overhead execution engine to deliver real-time response for high-volume applications.
 \end{LaTeXdescription}
 
+\begin{figure*}[!h]
+\centering
+	\begin{subfigure}{.55\columnwidth}
+		\includegraphics[width=\columnwidth]{figures/TopologySubmission}
+		\caption{The overview of the \\topology submission}
+		\label{fig:TopologySubmission}
+	\end{subfigure}\hspace{2.9em}
+	\begin{subfigure}{1.35\columnwidth}
+		\includegraphics[width=\columnwidth]{figures/TopologyWordCount}
+		\caption{An example wordcount topology}
+		\label{fig:TopologyWordcount}
+	\end{subfigure}\hfill
+\label{TopologyDescription}
+\caption{Overview of the topologies in Apache Storm and Twitter Heron}
+\end{figure*}
+
 \section{Related Work}
 \label{sec:RelatedWork}
 
+\lipsum[2-6]
+
+
 \cite{InfoQGameChanger}
+
+
 
 \section{Apache Storm}
 \label{sec:ApacheStorm}
+
+
+\begin{figure*}[!h]
+\centering
+	\begin{subfigure}{.55\columnwidth}
+		\includegraphics[scale=0.45]{figures/StormWorker}
+		    \caption{The overview of the Storm worker}
+		    \label{fig:StormWorkerOverview}
+	\end{subfigure}\hspace{2.9em}
+	\begin{subfigure}{1.35\columnwidth}
+		\includegraphics[scale=0.45]{figures/StormWorkerDetail}
+		    \caption{The internals of the Storm worker}
+		    \label{fig:StormWorkerDetail}
+	\end{subfigure}\hfill
+\label{StormOverview}
+\caption{Overview of Apache Storm architecture}
+\end{figure*}
+
+
+\lipsum[2-3]
+
+
+\subsection{Data model}
+
+\lipsum[2-4]
+
+\subsection{Architecture}
+
+\lipsum[2-4]
 
 \cite{StormTwitter}
 
 \section{Twitter Heron}
 \label{sec:TwitterHeron}
 
+\lipsum[2-4]
+
+
 \subsection{Evolution from Apache Storm}
 \label{sec:EvolutionFromApacheStorm}
 
+\lipsum[2-4]
+
+
 \subsection{Twitter Heron Architecture}
 \label{sec:TwitterHeronArchitecture}
+
+\lipsum[2-4]
+
+
+\begin{figure*}[!tp]
+    \centering
+    \includegraphics[scale=0.45]{figures/HeronOverview}
+    \caption{The overview of Heron}
+    \label{fig:HeronOverview}
+\end{figure*}
+
+\begin{figure*}[htp]
+    \centering
+    \includegraphics[scale=0.45]{figures/HeronInstance}
+    \caption{The internals of a Heron Instance}
+    \label{fig:HeronInstance}
+\end{figure*}
 
 \cite{ElasticScalingStreamProcessing}
 \cite{OnlyOneLook}
@@ -124,6 +201,9 @@ Later on, these requirements will be compared to Apache Storm and Twitter Heron.
 \section{Evaluation}
 \label{sec:Evaluation}
 
+\lipsum[2-4]
+
+
 \cite{TwitterHeronBlog}
 
 \cite{TwitterHeron}
@@ -135,6 +215,9 @@ Reference 8 requirements \ref{sec:RequirementsOfAStreamProcessingPlatform}.
 \label{sec:Conclusion}
 
 The conclusion goes here.
+
+\lipsum[2-4]
+
 
 
 % References
