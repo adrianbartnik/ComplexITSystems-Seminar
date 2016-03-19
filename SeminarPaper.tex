@@ -99,18 +99,18 @@ Later on, these requirements will be compared to Apache Storm and Twitter Heron.
 
 \begin{figure*}[!h]
 \centering
+	\begin{subfigure}{1.35\columnwidth}
+		\includegraphics[width=\columnwidth]{figures/TopologyWordCount}
+		\caption{The trending topics topology}
+		\label{fig:TopologyTrendingTopics}
+	\end{subfigure}\hspace{2.9em}
 	\begin{subfigure}{.55\columnwidth}
 		\includegraphics[width=\columnwidth]{figures/TopologySubmission}
 		\caption{The overview of the \\topology submission}
 		\label{fig:TopologySubmission}
-	\end{subfigure}\hspace{2.9em}
-	\begin{subfigure}{1.35\columnwidth}
-		\includegraphics[width=\columnwidth]{figures/TopologyWordCount}
-		\caption{An example wordcount topology}
-		\label{fig:TopologyWordcount}
 	\end{subfigure}\hfill
 \label{TopologyDescription}
-\caption{Overview of the topologies in Apache Storm and Twitter Heron}
+\caption{Overview of topologies in Apache Storm and Twitter Heron}
 \end{figure*}
 
 \section{Related Work}
@@ -118,14 +118,14 @@ Later on, these requirements will be compared to Apache Storm and Twitter Heron.
 
 \lipsum[2-6]
 
+Milwheel
+Spark Streaming
+Flink Streaming
 
 \cite{InfoQGameChanger}
 
-
-
 \section{Apache Storm}
 \label{sec:ApacheStorm}
-
 
 \begin{figure*}[!h]
 \centering
@@ -143,17 +143,36 @@ Later on, these requirements will be compared to Apache Storm and Twitter Heron.
 \caption{Overview of Apache Storm architecture}
 \end{figure*}
 
-
-\lipsum[2-3]
-
+Storm was Twitter's real-time distributed stream data processing engine, that powered the data management tasks and was crucial to provide Twitter services.
+During the design of Storm, they wanted the system to be scalable, so that is easy to add or remove nodes from the cluster without disrupting running tasks.
+It should be resilient as hardware component failures are the rule rather than the exception, and the cluster should continue processing existing topologies with a minimal performance impact.
+Furthermore, the system should be extensible, because future requirements are not known in advance, e.g. what services or components will be added the whole infrastructure, and it should adjust accordingly.
+Storm must also be highly performant, as it powers real-time applications and Twitter is running at a huge scale with millions of users.
+Last but not least, the whole system must be easy to administer, because it plays a big part in the user interaction and issues (performance or failure) will be therefore be immediately noticed.
+Thus, Storm needs to provide easy-to-use administrative tools and should emit warnings as soon as possible.
 
 \subsection{Data model}
 
-\lipsum[2-4]
+The heart of Strom's data model is a \emph{topology}, a directed acyclic graph of nodes as shown in figure \ref{fig:TopologyTrendingTopics}.
+It represents a logical view on how the data is flowing though the system.
+A \emph{spout}, the red node, is responsible for managing and piping incoming data into the topology, where the data can come from various sources: live data, message brokers (e.g. Kafka)  or a database.
+The counterpart is a \emph{bolt}, which is an abstraction for any kind of processing or computation, that we want to execute on the data items.
+In a topology, every spout or bolt is shown as a single node, but in a real cluster execution, the programmer has to manually specify how many instances of a spout or bolt are spawned.
+The data flow between the spout and bolt instances is defined by different partition strategies, e.g. \emph{Global grouping}, which sends the entire stream to a single bolt.
+To sum it up, a topology is a directed acyclic graph of spouts and bolts, that represents the logical flow of data through Storm.
+
+One example of a real-world topology is shown in figure \ref{fig:TopologyTrendingTopics}, which display the trending topics section on Twitter's homepage.
+It counts the currently most used words by the users and computes the 10 most relevant words.
+Here, the incoming tweets are received at the TweetSpout, which forwards the message content to some random ParseTweetBolt instance via the \emph{Shuffle Grouping} partition strategy.
+This bolt parses the message, filters common words and creates tuples with the word and the number of occurrences.
+It then forwards this tuple based on the word using the \emph{Field Grouping}, where one instance of the WordCountBolt receives all the tuples with the same key.
+And finally every 5 minutes, these bolt instances output their current state and a new version of the trending topics sections gets computed.
 
 \subsection{Architecture}
 
 \lipsum[2-4]
+
+Scheduler
 
 \cite{StormTwitter}
 
