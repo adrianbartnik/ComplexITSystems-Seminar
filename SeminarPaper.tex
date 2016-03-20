@@ -79,6 +79,8 @@ This way it becomes easier to distribute the computations onto different machine
 In many systems the computations on the data form a directed acyclic graph, e.g. the jobgraph in Flink or, as we will see, a topology in Heron \cite{Flink}.
 Finally, all computations should happen in-memory, because writing intermediate results to disk would introduce a big delay compared to pure memory access.
 
+% TODO Exactly, at most/least once processing
+
 \subsection{Requirements of a Stream Processing Platform}
 \label{sec:RequirementsOfAStreamProcessingPlatform}
 
@@ -116,13 +118,16 @@ Later on, these requirements will be compared to Apache Storm and Twitter Heron.
 \section{Related Work}
 \label{sec:RelatedWork}
 
-\lipsum[2-6]
+It might seem, that processing high volume data streams has just become a big research area in recent years by internet-scale companies, but the most systems build on top of work done from over a decade ago (\cite{StreamStanford}, \cite{Aurora}).
+In 2013, Google published their solution called MillWheel \cite{Millwheel}, which is not a complete system such as Apache Storm, but a "framework for building low-latency data-processing applications".
+The paper states, that it is currently widely used at Google, but the source code is not available.
+With Milwheel, Google focuses particularly on low latencies and exactly-once processing, which is neither available in Storm nor Heron.
+Finally, they say that their framework fulfills all eight requirements for a streaming system by Stonebraker et al., which were described previously.
 
-Milwheel
-Spark Streaming
-Flink Streaming
-
-\cite{InfoQGameChanger}
+Two open-source alternatives are Spark Streaming, which focuses on parallel recovery mechanisms and consistency across multiple nodes.
+They claim, their system scales linearly up to 100 nodes and at the same time provide subsecond latency and fault recovery \cite{SparkStreaming}.
+And lastly, also Apache Flink, which started at the TU Berlin, and recently seems to be gaining commercial traction \cite{FlinkUpcoming}.
+Its biggest advantage is, that is supports batch and stream processing alike \cite{Flink}.
 
 \section{Apache Storm}
 \label{sec:ApacheStorm}
