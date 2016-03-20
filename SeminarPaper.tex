@@ -11,7 +11,6 @@
 \usepackage{graphicx} % IncludeGraphis
 \usepackage{caption} % Subfigure
 \usepackage{subcaption} % Subfigure
-\usepackage{lipsum} % Lorem Ipsum dummy text
 
 % correct bad hyphenation here
 % \hyphenation{op-tical net-works semi-conduc-tor}
@@ -132,22 +131,6 @@ Its biggest advantage is, that is supports batch and stream processing alike \ci
 \section{Apache Storm}
 \label{sec:ApacheStorm}
 
-\begin{figure*}[!h]
-\centering
-	\begin{subfigure}{.55\columnwidth}
-		\includegraphics[scale=0.45]{figures/StormWorker}
-		    \caption{The overview of the Storm worker}
-		    \label{fig:StormWorkerOverview}
-	\end{subfigure}\hspace{2.9em}
-	\begin{subfigure}{1.35\columnwidth}
-		\includegraphics[scale=0.45]{figures/StormWorkerDetail}
-		    \caption{The internals of the Storm worker}
-		    \label{fig:StormWorkerDetail}
-	\end{subfigure}\hfill
-\label{StormOverview}
-\caption{Overview of Apache Storm architecture}
-\end{figure*}
-
 Storm was Twitter's real-time distributed stream data processing engine, that powered the data management tasks and was crucial to provide Twitter services.
 During the design of Storm, they wanted the system to be scalable, so that is easy to add or remove nodes from the cluster without disrupting running tasks.
 It should be resilient as hardware component failures are the rule rather than the exception, and the cluster should continue processing existing topologies with a minimal performance impact.
@@ -164,7 +147,7 @@ A \emph{spout}, the red node, is responsible for managing and piping incoming da
 The counterpart is a \emph{bolt}, which is an abstraction for any kind of processing or computation, that we want to execute on the data items.
 In a topology, every spout or bolt is shown as a single node, but in a real cluster execution, the programmer has to manually specify how many instances of a spout or bolt are spawned.
 The data flow between the spout and bolt instances is defined by different partition strategies, e.g. \emph{Global grouping}, which sends the entire stream to a single bolt.
-To sum it up, a topology is a directed acyclic graph of spouts and bolts, that represents the logical flow of data through Storm.
+To sum it up, a topology is a directed acyclic graph of spouts and bolts, that represents the logical flow of data through Storm \cite{StormTwitter}.
 
 One example of a real-world topology is shown in figure \ref{fig:TopologyTrendingTopics}, which display the trending topics section on Twitter's homepage.
 It counts the currently most used words by the users and computes the 10 most relevant words.
@@ -175,28 +158,64 @@ And finally every 5 minutes, these bolt instances output their current state and
 
 \subsection{Architecture}
 
-\lipsum[2-4]
+\begin{figure*}[!h]
+\centering
+	\begin{subfigure}{.55\columnwidth}
+		\includegraphics[scale=0.45]{figures/StormWorker}
+		    \caption{The overview of the Storm Worker}
+		    \label{fig:StormWorkerOverview}
+	\end{subfigure}\hspace{2.9em}
+	\begin{subfigure}{1.35\columnwidth}
+		\includegraphics[scale=0.45]{figures/StormWorkerDetail}
+		    \caption{The internals of the Storm Worker}
+		    \label{fig:StormWorkerDetail}
+	\end{subfigure}\hfill
+\label{fig:StormArchitectureOverview}
+\caption{Overview of Apache Storm architecture}
+\end{figure*}
 
-Scheduler
+Clients submit topologies to a master node, which called the \emph{Nimbus} and handles the scheduling of all topologies (Figure \ref{fig:TopologySubmission}).
+The Nimbus is responsible for distributing, coordinating and monitoring the execution of the topology.
+A more detailed view of the architecture of Storm is shown in figure \ref{fig:StormArchitecture}.
+The state and status of the cluster is maintained by ZooKeeper \cite{Zookeeper}.
+The actual work is done in the \emph{Worker Nodes}, which each host a \emph{Supervisor} and multiple \emph{Storm Worker}.
+The supervisor is responsible for communicating with the Nimbus via a periodic heartbeat protocol to advertise the execution state or to inform him about free resources to run more work.
+He also starts or stops Storm Workers, which are the units, that get scheduled by the Nimbus \ref{fig:StormArchitecture}.
 
-\cite{StormTwitter}
+\begin{figure}[!hb]
+		\includegraphics[width=\columnwidth]{figures/StormArchitecture}
+		\caption{The overview of the \\topology submission}
+		\label{fig:StormArchitecture}
+\end{figure}
+
+The general and also the detail architecture of a Storm Worker are shown in figures \ref{fig:StormWorkerOverview} and \ref{fig:StormWorkerDetail}.
+Each Storm Worker runs as one single JVM process and contains multiple \emph{Executors}, which in turn contain multiple tasks.
+One Storm Worker always belongs to one topology, but multiple Workers on the same machine may be executing different parts of the same topology.
+Each task is one instance of either a bolt or a spout and does actual work on the incoming data.
+Executors are just threads inside a Storm Worker and bundle multiple tasks.
+Thus, tasks provide intra-bolt/intra-spout parallelism, and the Executors provide intra-topology parallelism.
+Storm Worker serve as containers on the host machines to run Storm topologies.
+
+The detail architecture of a Storm Worker is shown in figure \ref{fig:StormWorkerDetail}.
+The routing of incoming and outgoing tuples inside a Worker is implemented via two global threads, the \emph{Worker Receive Thread} and the \emph{Worker Send Thread}, which handle the reception and sending respectively.
+An Executor consists of the 2 Threads.
+The \emph{User Logic Thread} takes incoming data from the \emph{In Queue}, executes the corresponding tasks (spout or bolt instances) and writes the result to the \emph{Out Queue}.
+For outgoing tuples that are destined for a different task on the same worker, the Executors \emph{Send Thread} writes the tuple directly into the In Queue of the destination task.
+Otherwise, it will send the tuple to the \emph{Global Out Queue}.
 
 \section{Twitter Heron}
 \label{sec:TwitterHeron}
 
-\lipsum[2-4]
-
-
 \subsection{Evolution from Apache Storm}
 \label{sec:EvolutionFromApacheStorm}
-
-\lipsum[2-4]
-
 
 \subsection{Twitter Heron Architecture}
 \label{sec:TwitterHeronArchitecture}
 
-\lipsum[2-4]
+\ref{fig:TopologySubmission}
+
+Aurora Scheduler introduces abstraction layer for 
+various other schedulers
 
 
 \begin{figure*}[!tp]
@@ -225,8 +244,6 @@ Scheduler
 \section{Evaluation}
 \label{sec:Evaluation}
 
-\lipsum[2-4]
-
 
 \cite{TwitterHeronBlog}
 
@@ -239,9 +256,6 @@ Reference 8 requirements \ref{sec:RequirementsOfAStreamProcessingPlatform}.
 \label{sec:Conclusion}
 
 The conclusion goes here.
-
-\lipsum[2-4]
-
 
 
 % References
