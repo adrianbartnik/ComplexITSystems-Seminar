@@ -285,24 +285,11 @@ And last but not least, Heron does not have a single point of failure anymore.
 \section{Conclusion}
 \label{sec:Conclusion}
 
-Processing of high-volume data steams
-Trading, social networks, Internet of things, system monitoring, analytics
-Characteristics:
-a one-at-a-time processing model
-data are processed immediately upon arrival and „in-stream“ 
-computations are simple and generally independent
+We have seen, that processing high-volume data streams has many use-cases in the real-word: from financial transaction over sensor measurements up to Twitter's messaging service.
+The main characteristics are an unbounded input data size with a one-at-a-time processing model, where the computations should be kept simple and independent and ideally happen upon arrival and "in-stream".
 
-Twitter Heron 
-Moved routing logic to Streaming manager
-Less overhead in Heron Instances due to scheduling 
-
-High-volume streams are everywhere
-One-at-a-time processing model
-Process upon arrival and “in-stream”
-Simple computations
-Routing logic
-Less Overhead due to scheduling
-
+We looked at the evolution from Twitter's initial platform Storm to its current system Heron.
+We saw, that the cleaner separation between routing logic and tuple processing, the metrics outsourcing and the more lightweight architecture lead to an improved system performance, better scalability and easer debuggabilty.
 
 % References
 
