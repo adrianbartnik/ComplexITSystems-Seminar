@@ -206,16 +206,39 @@ Otherwise, it will send the tuple to the \emph{Global Out Queue}.
 \section{Twitter Heron}
 \label{sec:TwitterHeron}
 
+Using Storm in production for several years, Twitter experienced that the system does not fulfill some desired properties: scalability, debuggability and performance.
+In Storm, work from multiple components of a topology is bundled into one operating system process, which makes debugging very challenging.
+When a topology misbehaves – which could be for a variety of reasons including load changes, misbehaving user code, or failing hardware – it was hard to determine the root-cause for those problems.
+Thus, a cleaner mapping from the logical units of computation to each physical process was needed \cite{TwitterHeronBlog, TwitterHeron}.
+
+In addition, Storm needed dedicated cluster resources, which required special hardware allocation to run Storm topologies.
+This approach leaded to inefficiencies in using precious cluster resources, and also limited the ability to scale on demand.
+A more flexible way in scheduling popular cluster resources across different types of data processing system (not only stream processing) was needed.
+
+Moreover, Storm did not provide an automated way of provisioning new or decommissioning old topologies, which required a lot of manual cluster management.
+The new system should be easier to manage, which would lead to a more efficient system and thus, at Twitter's scale, reduce infrastructure costs and also significantly improve the productivity of the cluster management.
+
 \subsection{Evolution from Apache Storm}
 \label{sec:EvolutionFromApacheStorm}
 
-\subsection{Twitter Heron Architecture}
+The major reason not to use an existing open-source alternative for their new system was driven by the fact, that Twitter was heavily dependent on existing Storm topologies for their production system.
+Instead, they decided to design a new system, Heron, for which the compatibility with the Storm and Summingbird API was essential.
+Summingbird provides a Scala-idiomatic way for programmers to express their computation and constraints generates many of the Storm topologies that are run in production \cite{Summingbird}.
+By maintaining the old API, Twitter could simple reuse all existing topologies, as well as all adjacent systems in their ecosystem, and the way one interacts with the programming model in terms of spouts, bolts and topologies remained the same.
+
+Scheduler
+Heron Instance
+
+\subsection{Architecture}
 \label{sec:TwitterHeronArchitecture}
 
 \ref{fig:TopologySubmission}
-
 Aurora Scheduler introduces abstraction layer for 
 various other schedulers
+
+\cite{Aurora}
+\cite{YARN}
+
 
 
 \begin{figure*}[!tp]
@@ -233,8 +256,6 @@ various other schedulers
 \end{figure*}
 
 \cite{ElasticScalingStreamProcessing}
-\cite{OnlyOneLook}
-\cite{YARN}
 \cite{ScalableDistributedStreamProcessing}
 
 % \section{Google MillWheel}
@@ -244,10 +265,6 @@ various other schedulers
 \section{Evaluation}
 \label{sec:Evaluation}
 
-
-\cite{TwitterHeronBlog}
-
-\cite{TwitterHeron}
 
 Reference 8 requirements \ref{sec:RequirementsOfAStreamProcessingPlatform}.
 
