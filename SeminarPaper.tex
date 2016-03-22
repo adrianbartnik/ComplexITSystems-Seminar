@@ -117,7 +117,7 @@ Later on, these requirements will be compared to Apache Storm and Twitter Heron.
 \section{Related Work}
 \label{sec:RelatedWork}
 
-It might seem, that processing high volume data streams has just become a big research area in recent years by internet-scale companies, but the most systems build on top of work done from over a decade ago (\cite{StreamStanford}, \cite{Aurora}).
+It might seem, that processing high volume data streams has just become a big research area in recent years by internet-scale companies, but the most systems build on top of work done from over a decade ago (\cite{StreamStanford, Aurora}).
 In 2013, Google published their solution called MillWheel \cite{Millwheel}, which is not a complete system such as Apache Storm, but a "framework for building low-latency data-processing applications".
 The paper states, that it is currently widely used at Google, but the source code is not available.
 With Milwheel, Google focuses particularly on low latencies and exactly-once processing, which is neither available in Storm nor Heron.
@@ -161,12 +161,12 @@ And finally every 5 minutes, these bolt instances output their current state and
 \begin{figure*}[!h]
 \centering
 	\begin{subfigure}{.55\columnwidth}
-		\includegraphics[scale=0.45]{figures/StormWorker}
+		\includegraphics[scale=0.35]{figures/StormWorker}
 		    \caption{The overview of the Storm Worker}
 		    \label{fig:StormWorkerOverview}
 	\end{subfigure}\hspace{2.9em}
 	\begin{subfigure}{1.35\columnwidth}
-		\includegraphics[scale=0.45]{figures/StormWorkerDetail}
+		\includegraphics[scale=0.35]{figures/StormWorkerDetail}
 		    \caption{The internals of the Storm Worker}
 		    \label{fig:StormWorkerDetail}
 	\end{subfigure}\hfill
@@ -203,6 +203,13 @@ The \emph{User Logic Thread} takes incoming data from the \emph{In Queue}, execu
 For outgoing tuples that are destined for a different task on the same worker, the Executors \emph{Send Thread} writes the tuple directly into the In Queue of the destination task.
 Otherwise, it will send the tuple to the \emph{Global Out Queue}.
 
+\begin{figure*}
+	\centering
+    \includegraphics[scale=0.35]{figures/HeronOverview}
+    \caption{The overview of Heron}
+    \label{fig:HeronOverview}
+\end{figure*}
+
 \section{Twitter Heron}
 \label{sec:TwitterHeron}
 
@@ -226,53 +233,75 @@ Instead, they decided to design a new system, Heron, for which the compatibility
 Summingbird provides a Scala-idiomatic way for programmers to express their computation and constraints generates many of the Storm topologies that are run in production \cite{Summingbird}.
 By maintaining the old API, Twitter could simple reuse all existing topologies, as well as all adjacent systems in their ecosystem, and the way one interacts with the programming model in terms of spouts, bolts and topologies remained the same.
 
-Scheduler
-Heron Instance
-
-\subsection{Architecture}
-\label{sec:TwitterHeronArchitecture}
-
-\ref{fig:TopologySubmission}
-Aurora Scheduler introduces abstraction layer for 
-various other schedulers
-
-\cite{Aurora}
-\cite{YARN}
-
-
-
-\begin{figure*}[!tp]
+\begin{figure*}
     \centering
-    \includegraphics[scale=0.45]{figures/HeronOverview}
-    \caption{The overview of Heron}
-    \label{fig:HeronOverview}
-\end{figure*}
-
-\begin{figure*}[htp]
-    \centering
-    \includegraphics[scale=0.45]{figures/HeronInstance}
+    \includegraphics[scale=0.35]{figures/HeronInstance}
     \caption{The internals of a Heron Instance}
     \label{fig:HeronInstance}
 \end{figure*}
 
-\cite{ElasticScalingStreamProcessing}
-\cite{ScalableDistributedStreamProcessing}
+\subsection{Architecture}
+\label{sec:TwitterHeronArchitecture}
 
-% \section{Google MillWheel}
+Heron also relies on Apache Zookeeper for the cluster management, but additionally implements an abstraction layer for various other scheduler (YARN, Mesos and ECS \cite{Aurora, YARM}, that makes it easy to run topologies on other clusters.
+The \emph{topology master} is responsible for maintaining the lifecycle of the topology, which can be supported by a standby topology master for availability.
+This is a huge improvement compared to Storm, where the Nimbus was a single point of failure.
+Figure \ref{fig:HeronOverview} gives an overview of Heron's architecture.
 
-% \cite{Millwheel}
+The equivalent of a Storm Worker is call simply container, which hosts a \emph{Stream Manager}, a \emph{Metrics Manager} and several \emph{Heron Instances}.
+Each Heron Instance connects to its local SM to send and receive tuples.
+The Stream Manager's task is to manage the tuple routing efficiently, so it either sends the tuples to Heron Instances in the same container locally or to a Stream Manager in another container.
+The Metrics Manager of each container collects and exports metrics from all the components in the system, e.g. about the system or topology status, and send them to the monitoring system.
+Compared to Storm, the biggest change is the Heron Instance, which is the realization either a tweet or a spout.
+Since the complexity of data movement has been moved to the Stream Managers, native Heron Instances in different languages could be supported in the future.
+
+A Heron instance, shown in figure \ref{fig:HeronInstance}, consists of 2 threads, the \emph{Gateway} and \emph{Execution Thread}, and 3 queues for communicating between each other.
+The queues are bound in size and if they reach their limit, a backpressure mechanism informs the Stream Manager to slow down the sending of tuples.
+The whole instances is implemented in a single JVM making it easier to predict the resource consumption and also improves debuggability to identify failures.
 
 \section{Evaluation}
 \label{sec:Evaluation}
 
+Comparing Storm and Heron to Stonebraker's paper in section \ref{sec:RequirementsOfAStreamProcessingPlatform}, we see that Heron fulfills all 8 whereas Storm only fulfills 7 requirements.
+Both systems provide a framework for using high-level stream-oriented operators, Summingbird, required by point 2.
+Through the input abstractions via spout, they make it easy to pull data in from various sources into a topology, described by point 5.
+Although both systems provide scaling mechanism, Heron is superior in the way how efficient and performant it is able to do so.
+The Nimbus, the single point of failure in Storm, is the reason why this system does not meet point 6: availability.
 
-Reference 8 requirements \ref{sec:RequirementsOfAStreamProcessingPlatform}.
+Comparing both system, we encounter various problems with the design of the Storm Worker.
+Starting off, it introduces scheduling decision on multiple levels: First, the underlying machine has to choose one Storm Worker to execute, which then contains multiple Executors with User Logic and Send Threads.
+Finally, the former may has to select between multiple tasks to run.
+In addition, an Executor may run disparate tasks, which makes it really hard to reason about the runtime behavior and especially the resource consumption.
+Furthermore, because each Storm Workers runs as a single JVM, debugging in case of failure becomes a nightmare.
+And lastly, the whole design introduces a lot of overhead, as each tuple has to pass 4 threads before being completely processed.
 
+Heron solves these problems, while maintaining consistency with the old API.
+The biggest improvement is the clean separation between routing logic and tuple processing trough the Stream Manager and Heron Instance.
+Combined with the fact, that each Heron Instance is using its own JVM and is running one specific task, this leads to a more fine grained predictability about runtime behavior, resource consumption and debuggability.
+Having a direct link between Heron Instance and Stream Manager also enables the system to implement backpressure mechanisms for controlling the volume of incoming tuples.
+The major performance advantage comes from the fact, that a Heron Instance uses fewer threads and queues for tuple processing and outsources monitoring to a separate component of the system.
+And last but not least, Heron does not have a single point of failure anymore.  
 
 \section{Conclusion}
 \label{sec:Conclusion}
 
-The conclusion goes here.
+Processing of high-volume data steams
+Trading, social networks, Internet of things, system monitoring, analytics
+Characteristics:
+a one-at-a-time processing model
+data are processed immediately upon arrival and „in-stream“ 
+computations are simple and generally independent
+
+Twitter Heron 
+Moved routing logic to Streaming manager
+Less overhead in Heron Instances due to scheduling 
+
+High-volume streams are everywhere
+One-at-a-time processing model
+Process upon arrival and “in-stream”
+Simple computations
+Routing logic
+Less Overhead due to scheduling
 
 
 % References
