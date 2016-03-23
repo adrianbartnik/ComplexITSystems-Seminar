@@ -18,7 +18,7 @@
 
 \begin{document}
 
-\title{Stream processing evolution from Apache Storm to Heron at Twitter}
+\title{Stream processing evolution from\\Apache Storm to Heron at Twitter}
 
 \author{\IEEEauthorblockN{Adrian Bartnik}
 \IEEEauthorblockA{Technische Universität Berlin\\Email: bartnik@campus.tu-berlin.de}}
@@ -286,10 +286,10 @@ And last but not least, Heron does not have a single point of failure anymore.
 \label{sec:Conclusion}
 
 We have seen, that processing high-volume data streams has many use-cases in the real-word: from financial transaction over sensor measurements up to Twitter's messaging service.
-The main characteristics are an unbounded input data size with a one-at-a-time processing model, where the computations should be kept simple and independent and ideally happen upon arrival and "in-stream".
+The main characteristics are an unbounded input data size with a one-at-a-time processing model, where the computations should be kept simple and independent and ideally happen "in-stream" upon arrival.
 
 We looked at the evolution from Twitter's initial platform Storm to its current system Heron.
-We saw, that the cleaner separation between routing logic and tuple processing, the metrics outsourcing and the more lightweight architecture lead to an improved system performance, better scalability and easer debuggabilty.
+We saw, that the cleaner separation between routing logic and tuple processing, the metrics outsourcing and the more lightweight architecture lead to an improved system performance, better scalability and easier debuggabilty.
 
 % References
 
